@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Estilos de Aprendizaje</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0E4481 0%, #30BDC4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0E4481, #30BDC4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: #E6BE1C;
+            height: 6px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            color: #0E4481;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            border-color: #30BDC4;
+            background: #f0f9fa;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #0E4481;
+            background: #e8f4f8;
+            box-shadow: 0 4px 12px rgba(14, 68, 129, 0.2);
+        }
+
+        .option-letter {
+            background: #0E4481;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: #FF981A;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1.05em;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-prev:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-next {
+            background: #FF981A;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-next:hover {
+            background: #e88810;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 26, 0.3);
+        }
+
+        .btn-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+        }
+
+        .results.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-title {
+            font-size: 2em;
+            color: #0E4481;
+            margin-bottom: 20px;
+        }
+
+        .result-main {
+            background: linear-gradient(135deg, #FF981A, #EFE722);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .result-main h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .result-main p {
+            font-size: 1.2em;
+        }
+
+        .result-details {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .result-details h3 {
+            color: #0E4481;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .result-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .result-details li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .result-details li:last-child {
+            border-bottom: none;
+        }
+
+        .result-details li:before {
+            content: "✓";
+            color: #30BDC4;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .score-bars {
+            margin: 30px 0;
+        }
+
+        .score-item {
+            margin-bottom: 20px;
+        }
+
+        .score-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .score-bar-bg {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-restart {
+            background: #0E4481;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1em;
+        }
+
+        .btn-restart:hover {
+            background: #0a3461;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 1.1em;
+            }
+
+            .option {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Test de Estilos de Aprendizaje</h1>
+            <p>Descubre cómo aprendes mejor</p>
+        </div>
+        <div class="progress-bar" id="progressBar"></div>
+        
+        <div class="content">
+            <div id="questionsSection">
+                <!-- Las preguntas se generarán aquí -->
+            </div>
+
+            <div class="results" id="results">
+                <h2 class="result-title">¡Resultados!</h2>
+                <div class="result-main">
+                    <h2 id="mainStyle"></h2>
+                    <p id="mainStyleDescription"></p>
+                </div>
+
+                <div class="score-bars" id="scoreBars"></div>
+
+                <div class="result-details">
+                    <h3>💡 Recomendaciones para ti:</h3>
+                    <ul id="recommendations"></ul>
+                </div>
+
+                <button class="btn-restart" onclick="restartTest()">Hacer el test de nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Cuando estudias para un examen, prefieres:",
+                options: [
+                    { text: "Ver videos, diagramas o imágenes sobre el tema", type: "V" },
+                    { text: "Escuchar explicaciones o podcasts educativos", type: "A" },
+                    { text: "Leer textos y hacer resúmenes escritos", type: "R" },
+                    { text: "Hacer experimentos o actividades prácticas", type: "K" }
+                ]
+            },
+            {
+                question: "Para recordar un número de teléfono nuevo:",
+                options: [
+                    { text: "Lo visualizas escrito mentalmente", type: "V" },
+                    { text: "Lo repites en voz alta varias veces", type: "A" },
+                    { text: "Lo escribes inmediatamente", type: "R" },
+                    { text: "Lo marcas varias veces en el teclado", type: "K" }
+                ]
+            },
+            {
+                question: "En clase, aprendes mejor cuando el profesor:",
+                options: [
+                    { text: "Usa presentaciones con muchas imágenes y colores", type: "V" },
+                    { text: "Explica verbalmente y cuenta historias", type: "A" },
+                    { text: "Da apuntes detallados para leer", type: "R" },
+                    { text: "Propone actividades y ejercicios para hacer", type: "K" }
+                ]
+            },
+            {
+                question: "Cuando armas algo nuevo (juguete, mueble, etc.):",
+                options: [
+                    { text: "Prefieres ver las instrucciones con dibujos", type: "V" },
+                    { text: "Te gusta que alguien te explique paso a paso", type: "A" },
+                    { text: "Lees el manual de instrucciones completo", type: "R" },
+                    { text: "Empiezas a armarlo directamente, aprendiendo mientras lo haces", type: "K" }
+                ]
+            },
+            {
+                question: "Para aprender un juego nuevo:",
+                options: [
+                    { text: "Miras un tutorial en video", type: "V" },
+                    { text: "Prefieres que te expliquen las reglas", type: "A" },
+                    { text: "Lees las instrucciones del juego", type: "R" },
+                    { text: "Empiezas a jugar y aprendes jugando", type: "K" }
+                ]
+            },
+            {
+                question: "Si tienes que hacer una presentación:",
+                options: [
+                    { text: "Usas muchas imágenes, gráficos y colores", type: "V" },
+                    { text: "Preparas bien lo que vas a decir", type: "A" },
+                    { text: "Escribes un guion detallado", type: "R" },
+                    { text: "Incluyes demostraciones o actividades para la audiencia", type: "K" }
+                ]
+            },
+            {
+                question: "Cuando conoces un lugar nuevo:",
+                options: [
+                    { text: "Recuerdas mejor usando mapas o referencias visuales", type: "V" },
+                    { text: "Recuerdas las indicaciones verbales de cómo llegar", type: "A" },
+                    { text: "Prefieres tener las direcciones por escrito", type: "R" },
+                    { text: "Necesitas ir una vez para recordar el camino", type: "K" }
+                ]
+            },
+            {
+                question: "Para concentrarte mientras estudias:",
+                options: [
+                    { text: "Necesitas un lugar ordenado y visualmente tranquilo", type: "V" },
+                    { text: "Prefieres silencio o música de fondo", type: "A" },
+                    { text: "Te ayuda tomar notas mientras lees", type: "R" },
+                    { text: "Necesitas moverte o cambiar de posición frecuentemente", type: "K" }
+                ]
+            },
+            {
+                question: "Al aprender un nuevo idioma, te funciona mejor:",
+                options: [
+                    { text: "Ver las palabras escritas y asociarlas con imágenes", type: "V" },
+                    { text: "Escuchar y repetir conversaciones", type: "A" },
+                    { text: "Leer textos y hacer ejercicios de gramática", type: "R" },
+                    { text: "Practicar hablando y actuando situaciones", type: "K" }
+                ]
+            },
+            {
+                question: "Cuando explicas algo a tus amigos:",
+                options: [
+                    { text: "Haces dibujos o diagramas", type: "V" },
+                    { text: "Das explicaciones verbales detalladas", type: "A" },
+                    { text: "Escribes la información o envías mensajes", type: "R" },
+                    { text: "Usas ejemplos prácticos o demostraciones", type: "K" }
+                ]
+            },
+            {
+                question: "En tu tiempo libre prefieres:",
+                options: [
+                    { text: "Ver películas, series o navegar en redes sociales", type: "V" },
+                    { text: "Escuchar música o podcasts", type: "A" },
+                    { text: "Leer libros, cómics o artículos", type: "R" },
+                    { text: "Hacer deportes o actividades físicas", type: "K" }
+                ]
+            },
+            {
+                question: "Si recibes instrucciones para una tarea:",
+                options: [
+                    { text: "Prefieres que te lo muestren con ejemplos visuales", type: "V" },
+                    { text: "Te basta con que te lo expliquen verbalmente", type: "A" },
+                    { text: "Necesitas que esté escrito para consultarlo", type: "R" },
+                    { text: "Prefieres que te guíen mientras lo haces", type: "K" }
+                ]
+            },
+            {
+                question: "Para recordar eventos importantes:",
+                options: [
+                    { text: "Recuerdas las imágenes o cómo se veían las cosas", type: "V" },
+                    { text: "Recuerdas lo que se dijo o los sonidos", type: "A" },
+                    { text: "Anotas todo en una agenda o calendario", type: "R" },
+                    { text: "Recuerdas lo que estabas haciendo en ese momento", type: "K" }
+                ]
+            },
+            {
+                question: "Cuando necesitas resolver un problema:",
+                options: [
+                    { text: "Haces esquemas o mapas mentales", type: "V" },
+                    { text: "Hablas contigo mismo o con otros sobre el problema", type: "A" },
+                    { text: "Haces listas escritas de pros y contras", type: "R" },
+                    { text: "Necesitas probar diferentes soluciones en la práctica", type: "K" }
+                ]
+            },
+            {
+                question: "En un museo o exposición:",
+                options: [
+                    { text: "Te fascina observar las obras y exhibiciones visuales", type: "V" },
+                    { text: "Prefieres las audioguías o las explicaciones de los guías", type: "A" },
+                    { text: "Lees con atención todas las descripciones escritas", type: "R" },
+                    { text: "Te gustan las exposiciones interactivas donde puedes tocar", type: "K" }
+                ]
+            }
+        ];
+
+        const styles = {
+            V: {
+                name: "Visual",
+                description: "Aprendes mejor viendo",
+                color: "#0E4481",
+                tips: [
+                    "Usa marcadores de colores al estudiar",
+                    "Crea mapas mentales y diagramas",
+                    "Mira videos educativos sobre los temas",
+                    "Estudia con flashcards o tarjetas visuales",
+                    "Organiza tus apuntes con esquemas y dibujos"
+                ]
+            },
+            A: {
+                name: "Auditivo",
+                description: "Aprendes mejor escuchando",
+                color: "#FF981A",
+                tips: [
+                    "Grábate leyendo tus apuntes y escúchalos después",
+                    "Participa en grupos de estudio donde se discuta",
+                    "Explica en voz alta lo que estás aprendiendo",
+                    "Escucha podcasts educativos",
+                    "Lee en voz alta cuando estudies"
+                ]
+            },
+            R: {
+                name: "Lectoescritura",
+                description: "Aprendes mejor leyendo y escribiendo",
+                color: "#30BDC4",
+                tips: [
+                    "Toma apuntes detallados en clase",
+                    "Reescribe tus apuntes con tus propias palabras",
+                    "Lee mucho sobre los temas que estudias",
+                    "Haz resúmenes escritos",
+                    "Crea listas y organizadores de información"
+                ]
+            },
+            K: {
+                name: "Kinestésico",
+                description: "Aprendes mejor haciendo y moviéndote",
+                color: "#E6BE1C",
+                tips: [
+                    "Haz pausas activas cuando estudies",
+                    "Usa objetos para aprender (manipulativos)",
+                    "Practica con ejercicios y experimentos",
+                    "Estudia mientras caminas o te mueves",
+                    "Busca aplicaciones prácticas de lo que aprendes"
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = { V: 0, A: 0, R: 0, K: 0 };
+        let selectedAnswers = new Array(questions.length).fill(null);
+
+        function initTest() {
+            const questionsSection = document.getElementById('questionsSection');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                if (index === 0) questionDiv.classList.add('active');
+                
+                questionDiv.innerHTML = `
+                    <div class="question-number">Pregunta ${index + 1} de ${questions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex}, '${opt.type}')">
+                                <div class="option-letter">${String.fromCharCode(65 + optIndex)}</div>
+                                <div class="option-text">${opt.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="button-container">
+                        ${index > 0 ? '<button class="btn-prev" onclick="prevQuestion()">← Anterior</button>' : '<div></div>'}
+                        <button class="btn-next" id="btnNext${index}" onclick="nextQuestion()" disabled>
+                            ${index === questions.length - 1 ? 'Ver Resultados' : 'Siguiente →'}
+                        </button>
+                    </div>
+                `;
+                
+                questionsSection.appendChild(questionDiv);
+            });
+            updateProgress();
+        }
+
+        function selectOption(questionIndex, optionIndex, type) {
+            const questionDiv = document.querySelectorAll('.question-container')[questionIndex];
+            const options = questionDiv.querySelectorAll('.option');
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            selectedAnswers[questionIndex] = { optionIndex, type };
+            document.getElementById(`btnNext${questionIndex}`).disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                document.querySelectorAll('.question-container')[currentQuestion].classList.remove('active');
+                currentQuestion++;
+                document.querySelectorAll('.question-container')[currentQuestion].classList.add('active');
+                updateProgress();
+            } else {
+                calculateResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                document.querySelectorAll('.question-container')[currentQuestion].classList.remove('active');
+                currentQuestion--;
+                document.querySelectorAll('.question-container')[currentQuestion].classList.add('active');
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function calculateResults() {
+            answers = { V: 0, A: 0, R: 0, K: 0 };
+            selectedAnswers.forEach(answer => {
+                if (answer) answers[answer.type]++;
+            });
+
+            const maxScore = Math.max(...Object.values(answers));
+            const mainStyleKey = Object.keys(answers).find(key => answers[key] === maxScore);
+            const mainStyle = styles[mainStyleKey];
+
+            document.getElementById('questionsSection').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+            
+            document.getElementById('mainStyle').textContent = `Tu estilo es: ${mainStyle.name}`;
+            document.getElementById('mainStyleDescription').textContent = mainStyle.description;
+
+            const scoreBars = document.getElementById('scoreBars');
+            scoreBars.innerHTML = '';
+            Object.keys(answers).forEach(key => {
+                const percentage = (answers[key] / questions.length) * 100;
+                scoreBars.innerHTML += `
+                    <div class="score-item">
+                        <div class="score-label">
+                            <span>${styles[key].name}</span>
+                            <span>${answers[key]} de ${questions.length}</span>
+                        </div>
+                        <div class="score-bar-bg">
+                            <div class="score-bar-fill" style="width: ${percentage}%; background: ${styles[key].color};">
+                                ${Math.round(percentage)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const recommendations = document.getElementById('recommendations');
+            recommendations.innerHTML = mainStyle.tips.map(tip => `<li>${tip}</li>`).join('');
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = { V: 0, A: 0, R: 0, K: 0 };
+            selectedAnswers = new Array(questions.length).fill(null);
+            
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('questionsSection').style.display = 'block';
+            
+            document.querySelectorAll('.question-container').forEach((q, index) => {
+                q.classList.remove('active');
+                if (index === 0) q.classList.add('active');
+                q.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                const btnNext = q.querySelector('.btn-next');
+                if (btnNext) btnNext.disabled = true;
+            });
+            
+            updateProgress();
+        }
+
+        initTest();
+    </script>
+</body>
+</html>
